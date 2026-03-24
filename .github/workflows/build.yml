@@ -27,6 +27,16 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_ALLOWED=NO \
             -derivedDataPath ./build \
+            build 2>&1 | grep -E "error:|warning:|Build succeeded|BUILD FAILED" || true
+          xcodebuild \
+            -project DualCameraApp.xcodeproj \
+            -scheme DualCameraApp \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath ./build \
             build
 
       - name: 打包为 IPA
