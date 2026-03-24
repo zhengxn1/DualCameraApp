@@ -1,0 +1,43 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:   # 允许手动触发
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 选择 Xcode 版本
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: 编译（不签名）
+        run: |
+          xcodebuild \
+            -project DualCameraApp.xcodeproj \
+            -scheme DualCameraApp \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath ./build \
+            build
+
+      - name: 打包为 IPA
+        run: |
+          mkdir -p Payload
+          cp -r ./build/Build/Products/Release-iphoneos/DualCameraApp.app Payload/
+          zip -r DualCameraApp.ipa Payload/
+
+      - name: 上传 IPA 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: DualCameraApp-IPA
+          path: DualCameraApp.ipa
+          retention-days: 7
