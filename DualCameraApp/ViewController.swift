@@ -225,7 +225,7 @@ class ViewController: UIViewController {
         DispatchQueue.main.async { [weak self] in
             let alert = UIAlertController(
                 title: "需要权限",
-                message: "请在"设置 > 隐私"中允许访问摄像头和相册",
+                message: "请在「设置 > 隐私」中允许访问摄像头和相册",
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "去设置", style: .default) { _ in
